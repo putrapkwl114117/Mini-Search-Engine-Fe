@@ -9,10 +9,10 @@ Fitur Utama
 - Input pencarian teks
 - Menampilkan hasil dari backend Django
 - Tampilan bersih dan responsif
-Struktur Proyek
 
 ```
 
+Struktur Proyek
 search-engine-fe-app/
 pages/
 index.js       #Halaman utama
@@ -21,9 +21,8 @@ components/      #Komponen UI
 public/
 styles/
 next.config.js
-
-
 ````
+
 Cara Menjalankan Proyek
 
 1. Clone Repository
