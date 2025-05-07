@@ -3,7 +3,7 @@
 
 ```markdowSearch Engine Mini  Frontend (React + Next.js)
 
-Frontend aplikasi **Search Engine Mini** ini dibuat menggunakan **React** dan **Next.js**. Aplikasi ini berfungsi sebagai antarmuka pencarian yang terhubung ke backend Django dan menampilkan hasil pencarian dari indeks Whoosh.
+Frontend aplikasi Search Engine Mini ini dibuat menggunakan React dan Next.js. Aplikasi ini berfungsi sebagai antarmuka pencarian yang terhubung ke backend Django dan menampilkan hasil pencarian dari indeks Whoosh.
 Fitur Utama
 
 - Input pencarian teks
@@ -17,7 +17,7 @@ search-engine-fe-app/
 pages/
 index.js       #Halaman utama
 
-components/        #Komponen UI
+components/      #Komponen UI
 public/
 styles/
 next.config.js
@@ -71,12 +71,12 @@ Build untuk Produksi
 ```bash
 npm run build
 npm run start
+```
 
 
----
+
 Catatan Tambahan
 
 * Pastikan backend berjalan di port yang sama atau aktif CORS di sisi Django.
 * Jika menggunakan fitur khusus (Tailwind, Zustand, Axios, dll), pastikan sudah tercantum di `package.json`.
 
-```
