@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+---
 
-First, run the development server:
+```markdown
+# Search Engine Mini ? Frontend (React + Next.js)
+
+Frontend aplikasi **Search Engine Mini** ini dibuat menggunakan **React** dan **Next.js**. Aplikasi ini berfungsi sebagai antarmuka pencarian yang terhubung ke backend Django dan menampilkan hasil pencarian dari indeks Whoosh.
+
+## Fitur Utama
+
+- Input pencarian teks
+- Menampilkan hasil dari backend Django
+- Tampilan bersih dan responsif
+
+## Struktur Proyek
+
+```
+
+search-engine-fe-app/
+??? pages/
+?   ??? index.js         # Halaman utama
+?   ??? ...
+??? components/          # Komponen UI
+??? public/
+??? styles/
+??? next.config.js
+??? ...
+
+````
+
+## Cara Menjalankan Proyek
+
+### 1. Clone Repository
+
+```bash
+git clone <url-repo-frontend-kamu>
+cd search-engine-fe-app
+````
+
+### 2. Install Dependency
+
+```bash
+npm install
+# atau
+yarn install
+```
+
+### 3. Jalankan Aplikasi
 
 ```bash
 npm run dev
-# or
+# atau
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Aplikasi akan berjalan di: [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Konfigurasi Koneksi ke Backend
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Pastikan kamu mengatur **URL backend Django** agar sesuai. Jika kamu menggunakan `.env.local`, tambahkan:
 
-## Learn More
+```env
+NEXT_PUBLIC_API_URL=http://127.0.0.1:8000
+```
 
-To learn more about Next.js, take a look at the following resources:
+Gunakan variabel `process.env.NEXT_PUBLIC_API_URL` saat melakukan fetch dari frontend.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Contoh Pengambilan Data dari Backend
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```js
+const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/search/?q=${query}`)
+const data = await res.json()
+```
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Build untuk Produksi
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run build
+npm run start
+``
+
+---
+
+## Catatan Tambahan
+
+* Pastikan backend berjalan di port yang sama atau aktif CORS di sisi Django.
+* Jika menggunakan fitur khusus (Tailwind, Zustand, Axios, dll), pastikan sudah tercantum di `package.json`.
+
+```
