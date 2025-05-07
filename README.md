@@ -27,7 +27,6 @@ Cara Menjalankan Proyek
 
 1. Clone Repository
 
-```bash
 git clone <url-repo-frontend-kamu>
 cd search-engine-fe-app
 ````
