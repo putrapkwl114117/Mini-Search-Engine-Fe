@@ -7,12 +7,12 @@ const CategoryMenu = ({
   <>
     {/* Menampilkan kategori Cough, Influenza, Cramps, dan Headaches sebelum pencarian */}
     {!searchPerformed && (
-      <div className="flex flex-wrap justify-center gap-1 max-w-lg mt-2 mb-6">
+      <div className="flex flex-wrap justify-center gap-1 max-w-lg  mb-6">
         {["Cough", "Influenza", "Cramps", "Headaches"].map((item) => (
           <button
             key={item}
             className="text-sm px-5 py-2 border rounded-full 
-              text-gray-700 dark:text-white 
+              text-gray-700 dark:text-gray-300 
               border-gray-300 dark:border-gray-600 
               hover:bg-gray-100 dark:hover:bg-gray-700 
               hover:border-blue-600 transition duration-200"

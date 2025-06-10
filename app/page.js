@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CircleUserRound, Frown, Sun, Moon } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 import AuthModal from "./components/modal/AuthModal";
 import LoadingBar from "./components/LoadingBar";
 import SearchResults from "./components/SearchResults";
@@ -29,39 +30,86 @@ export default function HomePage() {
   const [totalResults, setTotalResults] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  
+  useEffect(() => {
+    const query = searchParams.get("query");
+    if (query) {
+      const decodedQuery = decodeURIComponent(query.replace(/\+/g, " "));
+      setSearch(decodedQuery);
+      setSearchPerformed(true);
+      setTimeout(() => {
+        handleSearch(decodedQuery);
+      }, 0);
+    }
+  }, []);
+  
 
 
- const handleSearch = async () => {
-   if (!search.trim()) return;
+  useEffect(() => {
+    if (searchPerformed && results.length > 0 && selectedContent === null) {
+      if (!window.chatbase || window.chatbase("getState") !== "initialized") {
+        window.chatbase = (...args) => {
+          if (!window.chatbase.q) window.chatbase.q = [];
+          window.chatbase.q.push(args);
+        };
 
-   setIsLoading(true);
-   setSearchPerformed(true);
+        window.chatbase = new Proxy(window.chatbase, {
+          get(target, prop) {
+            if (prop === "q") return target.q;
+            return (...args) => target(prop, ...args);
+          },
+        });
 
-   try {
-     const response = await fetch(
-       `http://127.0.0.1:8000/search?query=${encodeURIComponent(
-         search
-       )}&category=${category}&page=${page}`
-     );
-     if (!response.ok) {
-       throw new Error("Request failed with status " + response.status);
-     }
-     const data = await response.json();
-    //  console.log("Data received:", data); 
-     setSummary(data.summary);
-     setResults(data.results);
+        const script = document.createElement("script");
+        script.src = "https://www.chatbase.co/embed.min.js";
+        script.id = "3FKe4Kpm4-oD58kFe7fSu";
+        script.setAttribute("domain", "www.chatbase.co");
+        document.body.appendChild(script);
+      }
+    }
+  }, [searchPerformed, results, selectedContent]);
+  
+
+
+  const handleSearch = async (manualSearch) => {
+    const searchTerm = manualSearch || search;
+    if (!searchTerm.trim()) return;
+
+    const queryParam = encodeURIComponent(
+      searchTerm.trim().replace(/\s+/g, "+")
+    );
+    router.push(`/?query=${queryParam}`, undefined, { shallow: true });
+
+
+    setIsLoading(true);
+    setSearchPerformed(true);
+
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/search?query=${encodeURIComponent(
+          searchTerm
+        )}&category=${category}&page=${page}`
+      );
+      if (!response.ok) {
+        throw new Error("Request failed with status " + response.status);
+      }
+      const data = await response.json();
+      setSummary(data.summary);
+      setResults(data.results);
       setTotalResults(data.totalResults);
       const pages = Math.ceil(data.totalResults / 10);
-    //  console.log("Total Pages:", pages); 
-     setTotalPages(pages);
-
-   } catch (error) {
-     console.error("Error fetching search results:", error);
-     alert("Terjadi kesalahan: " + error.message);
-   } finally {
-     setIsLoading(false);
-   }
- };
+      setTotalPages(pages);
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+      alert("Terjadi kesalahan: " + error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
 
 
 const handleCategoryChange = (newCategory) => {
@@ -135,11 +183,12 @@ const handlePaginationChange = (newPage) => {
           setSearch={setSearch}
           handleSearch={handleSearch}
           searchPerformed={searchPerformed}
+           setSearchPerformed={setSearchPerformed} 
         />
 
         <CategoryMenu
           selectedCategory={selectedCategory}
-          searchPerformed={searchPerformed}
+          searchPerformed={searchPerformed && !isLoading}
           handleCategoryChange={(newCategory) => {
             setSelectedCategory(newCategory);
             handleCategoryChange(newCategory);

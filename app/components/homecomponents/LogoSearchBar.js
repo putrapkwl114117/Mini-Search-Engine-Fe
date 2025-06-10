@@ -6,10 +6,19 @@ const LogoSearchBar = ({
   setSearch,
   handleSearch,
   searchPerformed,
+  setSearchPerformed,
 }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [hasSelected, setHasSelected] = useState(false);
   const previousSearch = useRef("");
+
+
+  useEffect(() => {
+    if (searchPerformed && search !== previousSearch.current) {
+      setSearchPerformed(false);
+    }
+  }, [search, searchPerformed]);
+  
 
   useEffect(() => {
     if (search.trim().length === 0) {
@@ -23,8 +32,7 @@ const LogoSearchBar = ({
       return;
     }
 
-    if (searchPerformed && search !== previousSearch.current) {
-    } else if (searchPerformed) {
+    if (searchPerformed) {
       setSuggestions([]);
       return;
     }
@@ -63,20 +71,42 @@ const LogoSearchBar = ({
 
   return (
     <div className="relative flex flex-col w-full max-w-2xl mb-6">
+      {/* Logo besar + nama dan slogan */}
+      {!searchPerformed && (
+        <div className="flex flex-col items-center gap-1">
+          <div className="flex items-start gap-1">
+            <img src="/logo1.png" alt="Logo" className="w-16 h-16 -mt-8" />
+            <h1 className="text-3xl font-bold text-blue-600 -mt-4">
+              DiagnoSense
+            </h1>
+          </div>
+          <p className="text-sm font-semibold text-gray-700  dark:text-gray-300 -ml-2 mb-6">
+            Your Digital Health Detective
+          </p>
+        </div>
+      )}
+
+      {/* Search input */}
       <div className="flex items-center gap-4 pl-4 relative">
         {searchPerformed && (
           <div className="absolute -left-12">
             <img src="/logo1.png" alt="Logo" className="w-10 h-10" />
           </div>
         )}
+
         <input
           type="text"
-          className="w-full p-3 pl-6 pr-12 text-lg rounded-full 
-            border border-gray-300 dark:border-gray-600 
-            shadow-md bg-white dark:bg-gray-800 
-            text-gray-900 dark:text-white 
-            placeholder-gray-500 dark:placeholder-gray-400 
-            focus:outline-none focus:ring-1 focus:ring-blue-600"
+          className={`w-full p-3 pl-6 pr-12 text-lg 
+    ${
+      suggestions.length > 0 && search.trim().length > 0
+        ? "rounded-t-lg"
+        : "rounded-full"
+    }
+    border border-gray-300 dark:border-gray-600 
+    shadow-md bg-white dark:bg-gray-800 
+    text-gray-900 dark:text-white 
+    placeholder-gray-500 dark:placeholder-gray-400 
+    focus:outline-none focus:ring-1 focus:ring-gray-600`}
           placeholder="Search"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -84,6 +114,7 @@ const LogoSearchBar = ({
             if (e.key === "Enter") onSearch();
           }}
         />
+
         <button
           type="submit"
           className="absolute right-3 top-1/2 transform -translate-y-1/2 
@@ -94,19 +125,20 @@ const LogoSearchBar = ({
         </button>
       </div>
 
-      {suggestions.length > 0 && (
+      {/* Suggestions */}
+      {suggestions.length > 0 && search.trim().length > 0 && (
         <ul
-          className="absolute top-full mt-1 w-full 
-          bg-white dark:bg-gray-800 
-          border border-gray-300 dark:border-gray-600 
-          rounded-lg shadow-lg z-10"
+          className="absolute top-full left-4 right-0 mt-0.5
+      bg-white dark:bg-gray-800 
+      border-x border-b border-gray-300 dark:border-gray-600 
+      rounded-b-lg shadow-xl z-10 overflow-hidden"
         >
           {suggestions.map((item, index) => (
             <li
               key={index}
               onClick={() => handleSuggestionClick(item)}
-              className="px-4 py-2 hover:bg-blue-100 dark:hover:bg-gray-700 cursor-pointer 
-                text-gray-800 dark:text-white"
+              className="px-6 py-2 text-sm font-semibold hover:bg-blue-100 dark:hover:bg-gray-700 cursor-pointer 
+          text-gray-800 dark:text-white"
             >
               {item}
             </li>
